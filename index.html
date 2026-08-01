@@ -410,10 +410,48 @@ clearInterval(interval);
 
 sorting=false;
 
+
+let late=time-patience;
+
+let face="🙂";
+
+
+if(late>0 && late<=60)
+face="😐";
+
+
+if(late>60 && late<=120)
+face="☹️";
+
+
+if(late>120)
+face="😡";
+
+
+document.getElementById("face")
+.innerHTML=face;
+
+
+if(face=="🙂")
+score+=100;
+
+else if(face=="😐")
+score+=50;
+
+else if(face=="☹️")
+score+=10;
+
+
+document.getElementById("score")
+.innerHTML=score;
+
+
 document.getElementById("result").innerHTML=
-"Finished!";
+"Finished in "+time+" seconds";
+
 
 setTimeout(newCustomer,2000);
+
 
 return;
 
