@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>The Sorting Factory (정렬공장)</title>
+<title>정렬 공장)</title>
 
 <style>
 body {
@@ -59,9 +59,7 @@ button {
 
 <body>
 
-<h1 id="title">🏭 The Sorting Factory</h1>
-
-<button onclick="toggleLanguage()">한국어</button>
+<h1 id="title">🏭 정렬 공장</h1>
 
 <div id="factory">
 
@@ -70,17 +68,16 @@ button {
 <div class="books" id="books"></div>
 
 <div>
-<span id="timeLabel">Sorting time:</span>
+<span id="timeLabel">정렬 시간</span>
 <span id="sortTime">0</span>
-<span id="secondsLabel">sec</span>
+<span id="secondsLabel">초</span>
 </div>
 
 <div id="sortingLog">
 </div>
 
 <div>
-Patience:
-<span id="patienceLabel">Patience:</span>
+인내심:
 <span id="patienceText"></span>
 </div>
 
@@ -93,30 +90,29 @@ Patience:
 <hr>
 
 <h3 id="chooseText">
-Choose a sorting machine
+정렬 기계를 선택하세요
 </h3>
 
-<button id="bubbleButton" onclick="sort('bubble')">
-🫧 Bubble Sort
+<button onclick="sort('bubble')">
+🫧 버블 정렬
 </button>
 
-<button id="insertionButton" onclick="sort('insertion')">
-📥 Insertion Sort
+<button onclick="sort('insertion')">
+📥 삽입 정렬
 </button>
 
-<button id="selectionButton" onclick="sort('selection')">
-🎯 Selection Sort
+<button onclick="sort('selection')">
+🎯 선택 정렬
 </button>
 
-<button id="mergeButton" onclick="sort('merge')">
-🌳 Merge Sort
+<button onclick="sort('merge')">
+🌳 병합 정렬
 </button>
-
 
 <h2 id="result"></h2>
 
 <h3>
-<span id="scoreLabel">Score:</span>
+<span id="scoreLabel">점수:</span>
 <span id="score">0</span>
 </h3>
 
@@ -125,75 +121,8 @@ Choose a sorting machine
 
 <script>
 
-let korean=false;
 let score=0;
 
-
-const language = {
-
-english: {
-
-title:"🏭 The Sorting Factory",
-
-languageButton:"한국어",
-
-customer:"Customer",
-
-patience:"Patience",
-
-choose:"Choose a sorting machine",
-
-bubble:"🫧 Bubble Sort",
-
-insertion:"📥 Insertion Sort",
-
-selection:"🎯 Selection Sort",
-
-merge:"🌳 Merge Sort",
-
-sortingTime:"Sorting time",
-
-finished:"Finished!",
-
-seconds:"sec",
-
-score:"Score"
-
-
-},
-
-
-korean: {
-
-title:"🏭 정렬공장",
-
-languageButton:"English",
-
-customer:"손님",
-
-patience:"인내심",
-
-choose:"정렬 기계를 선택하세요",
-
-bubble:"🫧 버블 정렬",
-
-insertion:"📥 삽입 정렬",
-
-selection:"🎯 선택 정렬",
-
-merge:"🌳 병합 정렬",
-
-sortingTime:"정렬 시간",
-
-finished:"완료!",
-
-seconds:"초",
-
-score:"점수"
-
-}
-
-};
 let sorting=false;
 
 let books=[];
@@ -422,8 +351,7 @@ books.join(" ");
 
 document.getElementById("customer")
 .innerHTML=
-(korean?"손님":"Customer")
-+" #"+Math.floor(Math.random()*999);
+"손님 #"+Math.floor(Math.random()*999);
 
 
 updatePatience();
@@ -515,17 +443,8 @@ document.getElementById("score")
 .innerHTML=score;
 
 
-document.getElementById("result").innerHTML =
-(korean ?
-language.korean.finished:
-language.english.finished)
-+
-" ("+
-time+
-(korean ?
-"초":
-" sec")
-+")";
+document.getElementById("result").innerHTML=
+"완료! 정렬 시간: "+time+"초";
 
 
 setTimeout(newCustomer,2000);
@@ -582,66 +501,7 @@ Math.min(100,patience/5)+"%";
 
 }
 
-
-// ---------- Language ----------
-
-function toggleLanguage(){
-
-korean=!korean;
-
-
-let lang=korean?
-language.korean:
-language.english;
-
-
-document.getElementById("title")
-.innerHTML=lang.title;
-
-
-document.getElementById("languageButton")
-.innerHTML=lang.languageButton;
-
-
-document.getElementById("chooseText")
-.innerHTML=lang.choose;
-
-
-document.getElementById("bubbleButton")
-.innerHTML=lang.bubble;
-
-
-document.getElementById("insertionButton")
-.innerHTML=lang.insertion;
-
-
-document.getElementById("selectionButton")
-.innerHTML=lang.selection;
-
-
-document.getElementById("mergeButton")
-.innerHTML=lang.merge;
-
-
-document.getElementById("patienceLabel")
-.innerHTML=lang.patience+":";
-
-
-document.getElementById("timeLabel")
-.innerHTML=lang.sortingTime+":";
-
-
-document.getElementById("secondsLabel")
-.innerHTML=lang.seconds;
-
-
-document.getElementById("scoreLabel")
-.innerHTML=lang.score+":";
-
-
-newCustomer();
-
-}
+    
 
 newCustomer();
 
