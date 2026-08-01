@@ -1,64 +1,502 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<title>The Sorting Factory</title>
-<link rel="stylesheet" href="style.css">
+<title>The Sorting Factory (정렬공장)</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background:#e8e2d6;
+    text-align:center;
+    padding:30px;
+}
+
+h1 {
+    color:#5b3a1a;
+}
+
+#factory {
+    background:white;
+    border-radius:15px;
+    padding:25px;
+    max-width:700px;
+    margin:auto;
+    box-shadow:0 5px 15px #999;
+}
+
+.books {
+    font-size:35px;
+    letter-spacing:8px;
+    margin:25px;
+}
+
+button {
+    padding:12px;
+    margin:5px;
+    font-size:16px;
+    cursor:pointer;
+}
+
+#face {
+    font-size:50px;
+}
+
+#patienceBar {
+    width:80%;
+    height:25px;
+    background:#ddd;
+    margin:auto;
+}
+
+#patienceFill {
+    height:100%;
+    background:green;
+    width:100%;
+}
+
+</style>
 </head>
 
 <body>
 
-<header>
 <h1 id="title">🏭 The Sorting Factory</h1>
 
-<button id="languageButton">
-한국어
-</button>
+<button onclick="toggleLanguage()">한국어</button>
 
-</header>
+<div id="factory">
 
-<div id="customerCard">
+<h2 id="customer"></h2>
 
-<h2 id="customerName"></h2>
+<div class="books" id="books"></div>
 
-<div id="books"></div>
+<div>
+Sorting time:
+<span id="sortTime">0</span> sec
+</div>
 
-<div class="info">
+<div id="sortingLog">
+</div>
 
 <div>
 Patience:
-<span id="patience"></span>
+<span id="patienceText"></span>
+</div>
+
+<div id="patienceBar">
+<div id="patienceFill"></div>
 </div>
 
 <div id="face">🙂</div>
 
+<hr>
+
+<h3 id="chooseText">
+Choose a sorting machine
+</h3>
+
+<button onclick="sort('bubble')">
+🫧 Bubble Sort
+</button>
+
+<button onclick="sort('insertion')">
+📥 Insertion Sort
+</button>
+
+<button onclick="sort('selection')">
+🎯 Selection Sort
+</button>
+
+<button onclick="sort('merge')">
+🌳 Merge Sort
+</button>
+
+
+<h2 id="result"></h2>
+
+<h3>
+Score:
+<span id="score">0</span>
+</h3>
+
 </div>
 
-</div>
 
-<div id="buttons">
+<script>
 
-<button onclick="choose('bubble')">
-Bubble Sort
-</button>
+let korean=false;
+let score=0;
+let sorting=false;
 
-<button onclick="choose('insertion')">
-Insertion Sort
-</button>
+let books=[];
+let patience=0;
 
-<button onclick="choose('selection')">
-Selection Sort
-</button>
+const letters="ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
-<button onclick="choose('merge')">
-Merge Sort
-</button>
 
-</div>
+// ---------- Utilities ----------
 
-<div id="result"></div>
+function shuffle(arr){
 
-<script src="script.js"></script>
+let a=[...arr];
+
+for(let i=a.length-1;i>0;i--){
+
+let j=Math.floor(Math.random()*(i+1));
+
+[a[i],a[j]]=[a[j],a[i]];
+
+}
+
+return a;
+
+}
+
+// ---------- Sorting Steps ----------
+
+function bubbleSteps(a){
+
+let arr=[...a];
+let steps=[];
+
+for(let i=0;i<arr.length;i++){
+
+for(let j=0;j<arr.length-i-1;j++){
+
+if(arr[j]>arr[j+1]){
+
+let x=arr[j];
+let y=arr[j+1];
+
+[arr[j],arr[j+1]]=
+[arr[j+1],arr[j]];
+
+steps.push({
+books:[...arr],
+text:`Swap ${x} and ${y}`
+});
+
+}
+
+}
+
+}
+
+return steps;
+
+}
+
+
+function selectionSteps(a){
+
+let arr=[...a];
+let steps=[];
+
+for(let i=0;i<arr.length;i++){
+
+let min=i;
+
+for(let j=i+1;j<arr.length;j++){
+
+if(arr[j]<arr[min])
+min=j;
+
+}
+
+if(min!==i){
+
+let x=arr[i];
+let y=arr[min];
+
+[arr[i],arr[min]]=
+[arr[min],arr[i]];
+
+steps.push({
+books:[...arr],
+text:`Swap ${x} and ${y}`
+});
+
+}
+
+}
+
+return steps;
+
+}
+
+
+function insertionSteps(a){
+
+let arr=[...a];
+let steps=[];
+
+
+for(let i=1;i<arr.length;i++){
+
+let value=arr[i];
+let j=i-1;
+
+
+while(j>=0 && arr[j]>value){
+
+arr[j+1]=arr[j];
+
+steps.push({
+books:[...arr],
+text:`Move ${arr[j]}`
+});
+
+j--;
+
+}
+
+
+arr[j+1]=value;
+
+
+steps.push({
+books:[...arr],
+text:`Insert ${value}`
+});
+
+}
+
+
+return steps;
+
+}
+
+
+function mergeSteps(a){
+
+let steps=[];
+
+
+function mergeSort(arr){
+
+if(arr.length<=1)
+return arr;
+
+
+let mid=Math.floor(arr.length/2);
+
+
+let left=mergeSort(arr.slice(0,mid));
+let right=mergeSort(arr.slice(mid));
+
+
+let result=[];
+
+
+while(left.length && right.length){
+
+if(left[0]<right[0])
+result.push(left.shift());
+
+else
+result.push(right.shift());
+
+
+steps.push({
+books:[...result,...left,...right],
+text:"Merge books"
+});
+
+}
+
+
+return result.concat(left,right);
+
+}
+
+
+mergeSort([...a]);
+
+return steps;
+
+}
+
+// ---------- Customer ----------
+
+function newCustomer(){
+
+let size=Math.floor(Math.random()*18)+5;
+
+books=shuffle(
+letters.slice(0,size)
+);
+
+
+let times=[
+
+bubbleSteps(books).length,
+insertionSteps(books).length,
+selectionSteps(books).length,
+mergeSteps(books).length
+
+];
+
+
+let best=Math.min(...times);
+
+
+// best algorithm gets a reasonable chance
+
+patience=
+best*10+
+Math.floor(Math.random()*60)+30;
+
+
+document.getElementById("books")
+.innerHTML=
+books.join(" ");
+
+
+document.getElementById("customer")
+.innerHTML=
+(korean?"손님":"Customer")
++" #"+Math.floor(Math.random()*999);
+
+
+updatePatience();
+
+document.getElementById("face").innerHTML="🙂";
+
+document.getElementById("result").innerHTML="";
+
+}
+
+
+
+// ---------- Gameplay ----------
+
+function sort(type){
+
+if(sorting)
+return;
+
+sorting=true;
+
+
+let steps;
+
+
+if(type=="bubble")
+steps=bubbleSteps(books);
+
+if(type=="selection")
+steps=selectionSteps(books);
+
+if(type=="insertion")
+steps=insertionSteps(books);
+
+if(type=="merge")
+steps=mergeSteps(books);
+
+
+
+let index=0;
+let time=0;
+
+
+document.getElementById("sortingLog").innerHTML="";
+
+
+let interval=setInterval(()=>{
+
+
+if(index>=steps.length){
+
+clearInterval(interval);
+
+sorting=false;
+
+document.getElementById("result").innerHTML=
+"Finished!";
+
+setTimeout(newCustomer,2000);
+
+return;
+
+}
+
+
+let step=steps[index];
+
+
+books=step.books;
+
+
+document.getElementById("books")
+.innerHTML=
+books.join(" ");
+
+
+time+=10;
+
+
+document.getElementById("sortTime")
+.innerHTML=time;
+
+
+document.getElementById("sortingLog")
+.innerHTML=
+step.text+" (+10 sec)";
+
+
+index++;
+
+
+},500);
+
+
+}
+
+
+
+function updatePatience(){
+
+document.getElementById("patienceText")
+.innerHTML=
+patience+" sec";
+
+
+document.getElementById("patienceFill")
+.style.width=
+Math.min(100,patience/5)+"%";
+
+}
+
+
+// ---------- Language ----------
+
+function toggleLanguage(){
+
+korean=!korean;
+
+
+document.getElementById("title")
+.innerHTML=
+korean?
+"🏭 정렬공장":
+"🏭 The Sorting Factory";
+
+
+document.querySelector("button")
+.innerHTML=
+korean?
+"English":
+"한국어";
+
+
+newCustomer();
+
+}
+
+
+newCustomer();
+
+
+</script>
 
 </body>
 </html>
