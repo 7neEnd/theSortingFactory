@@ -70,8 +70,9 @@ button {
 <div class="books" id="books"></div>
 
 <div>
-Sorting time:
-<span id="sortTime">0</span> sec
+<span id="timeLabel">Sorting time:</span>
+<span id="sortTime">0</span>
+<span id="secondsLabel">sec</span>
 </div>
 
 <div id="sortingLog">
@@ -79,6 +80,7 @@ Sorting time:
 
 <div>
 Patience:
+<span id="patienceLabel">Patience:</span>
 <span id="patienceText"></span>
 </div>
 
@@ -94,19 +96,19 @@ Patience:
 Choose a sorting machine
 </h3>
 
-<button onclick="sort('bubble')">
+<button id="bubbleButton" onclick="sort('bubble')">
 🫧 Bubble Sort
 </button>
 
-<button onclick="sort('insertion')">
+<button id="insertionButton" onclick="sort('insertion')">
 📥 Insertion Sort
 </button>
 
-<button onclick="sort('selection')">
+<button id="selectionButton" onclick="sort('selection')">
 🎯 Selection Sort
 </button>
 
-<button onclick="sort('merge')">
+<button id="mergeButton" onclick="sort('merge')">
 🌳 Merge Sort
 </button>
 
@@ -114,7 +116,7 @@ Choose a sorting machine
 <h2 id="result"></h2>
 
 <h3>
-Score:
+<span id="scoreLabel">Score:</span>
 <span id="score">0</span>
 </h3>
 
@@ -125,6 +127,73 @@ Score:
 
 let korean=false;
 let score=0;
+
+
+const language = {
+
+english: {
+
+title:"🏭 The Sorting Factory",
+
+languageButton:"한국어",
+
+customer:"Customer",
+
+patience:"Patience",
+
+choose:"Choose a sorting machine",
+
+bubble:"🫧 Bubble Sort",
+
+insertion:"📥 Insertion Sort",
+
+selection:"🎯 Selection Sort",
+
+merge:"🌳 Merge Sort",
+
+sortingTime:"Sorting time",
+
+finished:"Finished!",
+
+seconds:"sec",
+
+score:"Score"
+
+
+},
+
+
+korean: {
+
+title:"🏭 정렬공장",
+
+languageButton:"English",
+
+customer:"손님",
+
+patience:"인내심",
+
+choose:"정렬 기계를 선택하세요",
+
+bubble:"🫧 버블 정렬",
+
+insertion:"📥 삽입 정렬",
+
+selection:"🎯 선택 정렬",
+
+merge:"🌳 병합 정렬",
+
+sortingTime:"정렬 시간",
+
+finished:"완료!",
+
+seconds:"초",
+
+score:"점수"
+
+}
+
+};
 let sorting=false;
 
 let books=[];
@@ -446,8 +515,17 @@ document.getElementById("score")
 .innerHTML=score;
 
 
-document.getElementById("result").innerHTML=
-"Finished in "+time+" seconds";
+document.getElementById("result").innerHTML =
+(korean ?
+language.korean.finished:
+language.english.finished)
++
+" ("+
+time+
+(korean ?
+"초":
+" sec")
++")";
 
 
 setTimeout(newCustomer,2000);
@@ -512,24 +590,58 @@ function toggleLanguage(){
 korean=!korean;
 
 
+let lang=korean?
+language.korean:
+language.english;
+
+
 document.getElementById("title")
-.innerHTML=
-korean?
-"🏭 정렬공장":
-"🏭 The Sorting Factory";
+.innerHTML=lang.title;
 
 
-document.querySelector("button")
-.innerHTML=
-korean?
-"English":
-"한국어";
+document.getElementById("languageButton")
+.innerHTML=lang.languageButton;
+
+
+document.getElementById("chooseText")
+.innerHTML=lang.choose;
+
+
+document.getElementById("bubbleButton")
+.innerHTML=lang.bubble;
+
+
+document.getElementById("insertionButton")
+.innerHTML=lang.insertion;
+
+
+document.getElementById("selectionButton")
+.innerHTML=lang.selection;
+
+
+document.getElementById("mergeButton")
+.innerHTML=lang.merge;
+
+
+document.getElementById("patienceLabel")
+.innerHTML=lang.patience+":";
+
+
+document.getElementById("timeLabel")
+.innerHTML=lang.sortingTime+":";
+
+
+document.getElementById("secondsLabel")
+.innerHTML=lang.seconds;
+
+
+document.getElementById("scoreLabel")
+.innerHTML=lang.score+":";
 
 
 newCustomer();
 
 }
-
 
 newCustomer();
 
